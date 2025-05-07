@@ -1,8 +1,9 @@
-import {useRef,useState,useEffect} from "react";
+import {useRef,useState,useEffect, Suspense} from "react";
 import {useFrame,extend,Canvas} from "@react-three/fiber";
 import {useAuth0} from "@auth0/auth0-react";
 import {shaderMaterial,useTexture,Stars,OrbitControls} from "@react-three/drei";
 import Error from "./Error";
+import Loader from "./Loader";
 const TestShaderMaterial2=shaderMaterial(
     {
         uTime:0.0,
@@ -128,7 +129,7 @@ extend({TestShaderMaterial2});
 const Pattern=({email})=>{
     const[texturePath2,setTexture2]=useState([]);
     useEffect(()=>{
-        const endPoint=`http://localhost:8000/image/${email}/circle`;
+        const endPoint=`https://cloudinary-backend-sooty.vercel.app/image/${email}/circle`;
         async function fetchImages(){
             try{
                 const res=await fetch(endPoint,{
@@ -138,6 +139,9 @@ const Pattern=({email})=>{
                 const texture2=[];
                 arr.map((image)=>{
                     texture2.push(image.url);
+                })
+                texture2.map((path)=>{
+                    useTexture.preload(path);
                 })
                 setTexture2(texture2);
             }
@@ -166,13 +170,17 @@ const Circle=()=>{
     if(user){
         return(
             <>
+            
             <Canvas style={{height:'100vh',width:'100vw',backgroundColor:"black"}} camera={{position:[0,0,5],fov:75}}>
+            <Suspense fallback={<Loader/>}>
             <Pattern email={user.email}/>
             <OrbitControls enableZoom={false} enablePan={false} enableRotate={true}/>
             <ambientLight intensity={0.5}/>
               <directionalLight position={[0,0,5]} intensity={1}/> 
             <Stars/>
+            </Suspense>
             </Canvas>
+           
      </>)
     }
     else{

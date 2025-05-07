@@ -3,6 +3,7 @@ import {useFrame,extend,Canvas} from "@react-three/fiber";
 import {useAuth0} from "@auth0/auth0-react";
 import {shaderMaterial,useTexture,Sparkles,OrbitControls,Sky} from "@react-three/drei";
 import Error from "./Error";
+import Loader from "./Loader";
 const TestShaderMaterial1=shaderMaterial(
     {
         uTime:0.0,
@@ -106,7 +107,7 @@ const Pattern1=({email})=>{
   const [texturePath1,setTexture1]=useState([]);
   useEffect(()=>{
       async function fetchImages(){
-          const endPoint=`http://localhost:8000/image/${email}/cube`;
+          const endPoint=`https://cloudinary-backend-sooty.vercel.app/image/${email}/cube`;
           const res=await fetch(endPoint,{
             method:"GET",
           })
@@ -123,6 +124,9 @@ const Pattern1=({email})=>{
   },[])
   const meshRef=useRef(null);
   const texture1=useTexture(texturePath1);
+  texturePath1.map((path)=>{
+    useTexture.preload(path);
+  })
   useFrame(()=>{
       if(meshRef.current){
           meshRef.current.material.uniforms.uTime.value+=0.0055;
@@ -142,14 +146,16 @@ const Cube=()=>{
       console.log(user.email);
         return(
         <>
-        <Suspense fallback={<h1>Hello</h1>}>
+        
            <Canvas style={{height:"100vh",width:"100vw"}}>
+           <Suspense fallback={<Loader/>}>
            <Pattern1 email={user.email}/>
            <Sky/>
            <Sparkles count={100} scale={[10,10,10]} size={1} color="white" position={[0,0,0]}/>
            <OrbitControls/>
+           </Suspense>
            </Canvas>
-        </Suspense>  
+          
         </>)
      }
      else{

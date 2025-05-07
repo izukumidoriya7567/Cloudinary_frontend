@@ -1,7 +1,9 @@
 import {OrbitControls,shaderMaterial,Stars,Sparkles,useTexture} from "@react-three/drei";
 import {Canvas,extend,useFrame} from "@react-three/fiber";
-import {useRef,useEffect,useState} from "react";
+import {useRef,useEffect,useState,Suspense} from "react";
 import {useAuth0} from "@auth0/auth0-react";
+import {useLoader} from "@react-three/fiber";
+import Loader from "./Loader";
 import * as THREE from "three";
 import Error from "./Error";
 const TestShaderMaterial3=shaderMaterial(
@@ -34,7 +36,7 @@ const Pattern3=({email})=>{
     const [texturePath3,setTexture3]=useState([]);
     useEffect(()=>{
         async function fetchImages(){
-            const res=await fetch(`http://localhost:8000/image/${email}/waves`,{
+            const res=await fetch(`https://cloudinary-backend-sooty.vercel.app/image/${email}/waves`,{
                 method:"GET",
             })
             const arr=await res.json();
@@ -47,10 +49,11 @@ const Pattern3=({email})=>{
         }
         fetchImages();
     },[])
-    const textures = texturePath3 ? useTexture(texturePath3) : [];
+    const textures = texturePath3 ? useLoader(THREE.TextureLoader,texturePath3) : [];
     const meshRef1=useRef(null);
     const meshRef2=useRef(null);
     const meshRef3=useRef(null);
+    texturePath3.forEach(path => useTexture.preload(path));
     useFrame(()=>{
         if(meshRef1.current){
             meshRef1.current.material.uniforms.uTime.value+=0.001;
@@ -81,12 +84,16 @@ const Wave=()=>{
     const {user}=useAuth0();
     if(user){
         return(<>
+        
             <Canvas style={{height:"100vh",width:"100vw",backgroundColor:"black"}}>
+            <Suspense fallback={<Loader/>}>
             <Pattern3 email={user.email}/>
             <Sparkles/>
             <Stars/>
             <OrbitControls enableZoom={true} enablePan={false} />
+            </Suspense>
             </Canvas>
+          
           </>)
     }
     else{

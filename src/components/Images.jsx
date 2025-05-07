@@ -45,7 +45,7 @@ const {getInputProps,getRootProps,isDragActive}=useDropzone({
   else{
     const email=user.email;
     const retrieveImages=async()=>{
-         const endPoint=`http://localhost:8000/image/${email}/${optionRef.current.value}`
+         const endPoint=`https://cloudinary-backend-sooty.vercel.app/image/arpitghr12@gmail.com/cube`
          const image_data=await fetch(endPoint,{
             method:"GET",
          });
@@ -58,6 +58,11 @@ const {getInputProps,getRootProps,isDragActive}=useDropzone({
           return [...prev].filter((x)=>x!==file);
       });       
     }
+    const removeImage=(file)=>{
+      setImages((prev)=>{
+       return [...prev].filter((x)=>x!==file) 
+      })
+    } 
     const removeFile=(file)=>{
         setAcceptedFiles((prev)=>{
             return [...prev].filter((x)=>x!==file);
@@ -65,14 +70,15 @@ const {getInputProps,getRootProps,isDragActive}=useDropzone({
     }
     const deleteFile=async(public_id)=>{
         try{
-          const endPoint=`http://localhost:8000/images/${public_id}`;
+          const endPoint=`https://cloudinary-backend-sooty.vercel.app/images/${public_id}`;
           const res=await fetch(endPoint,{
             method:"DELETE",
           })
-          console.log(res);
+          const ans=await res.json();
+          alert(ans.message);
         }
         catch(e){
-           console.log(`Error in deletion:${e}`);
+          alert(`Error: ${e}`);
         }
     }
     const removeAllFiles=()=>{
@@ -90,6 +96,12 @@ const {getInputProps,getRootProps,isDragActive}=useDropzone({
                method:"POST",
                body:data,
             })
+            if(result.status===200){
+              alert("All the Images have been uploaded successfully");
+            }
+            else{
+              alert("Image cannot be uploaded");
+            }
        })
        setAcceptedFiles([]);
     }
@@ -108,19 +120,20 @@ const {getInputProps,getRootProps,isDragActive}=useDropzone({
       <div className="my-[15px]">
         <h1 className="m-[10px] font-bold text-[25px] md:text-[35px]">Where to upload</h1>
           <select className="outline-2 outline-sky-500 h-[35px] w-[55px] md:h-[50px] md:w-[80px] text-[15px] md:text-[25px] rounded-xl" ref={optionRef} name="fruits">
-            <option value="cube">Cube</option>
-            <option value="circle">Circle</option>
-            <option value="waves">Waves</option>
-            <option value="book">Book</option>
+            <option className="flex justify-center items-center" value="cube">Cube</option>
+            <option className="flex justify-center items-center" value="circle">Circle</option>
+            <option className="flex justify-center items-center" value="waves">Waves</option>
+            <option className="flex justify-center items-center" value="book">Book</option>
           </select>
       </div>
       <div className="my-[27.5px] flex flex-row justify-between">
         <motion.button whileHover={{scale:1.1}} whileTap={
           {
-            scale:1.25,
+            scale:[0.85,1.10],
             transition:{
-             ease:"easeInOut",
-             duration:3.0,
+              delay:1.0,
+              type:"keyframes",
+              duration:6.0,
             }
           }
         }
@@ -133,7 +146,12 @@ const {getInputProps,getRootProps,isDragActive}=useDropzone({
         }} 
         whileTap={
           {
-            scale:1.25,
+            scale:[0.85,1.10],
+            transition:{
+              type:"keyframes",
+              delay:1.0,
+              duration:6.0,
+            }
           }
           } className="bg-cyan-400 text-[15px] md:text-[20px] hover:bg-sky-400 font-bold rounded-xl p-[10px]" onClick={()=>{uploadToCloudinary()}}>
         Upload To Cloudinary
@@ -166,7 +184,8 @@ const {getInputProps,getRootProps,isDragActive}=useDropzone({
                       }
                     }} 
                     onClick={()=>{
-                      deleteFile(image.public_id)
+                      deleteFile(image.public_id);
+                      removeImage(image);
                     }}>
                       <RxCross2 className="mx-auto size-[27.5px] md:size-[50px]"/>
                     </motion.button>
@@ -186,10 +205,11 @@ const {getInputProps,getRootProps,isDragActive}=useDropzone({
       </div>
       <motion.button whileHover={{scale:1.1}} whileTap={
          {
-           scale:1.25,
+           scale:[0.85,1.1],
            transition:{
-            ease:"easeInOut",
-            duration:3.0,
+            delay:1.0,
+            duration:4.0,
+            type:"keyframes",
            }
          }
        }
@@ -207,13 +227,6 @@ const {getInputProps,getRootProps,isDragActive}=useDropzone({
             [...acceptedFiles].map((file,index)=>{
               return(
                 <motion.li key={index} 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1,
-                    transition:{
-                    delay:1.0,
-                    type:"inertia",
-                    duration:1.0,
-                   }}}
                   exit={{ 
                     opacity: 0, 
                     transition:{ 

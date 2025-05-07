@@ -42,17 +42,17 @@ const Navbar=()=>{
   // },[])
   return(<>
         <nav className="bg-black text-white flex flex-row justify-between gap-[10px]">
-          {
+            {
           isAuthenticated ? (
-          <div className="gap-[15px] flex flex-row text-[17.5px]">
+          <div className="h-auto w-1/3 gap-[15px] flex flex-row text-[17.5px]">
             <img className="h-[51px] w-[51px]" src={user.picture} alt={user.name}></img>
             <div className="flex flex-col">
             <p>Welcome</p>
             <p>{user.name}</p>
             </div>
           </div>
-          ):(<p className="mt-[10px] ml-[5px]">Login First</p>)
-        }
+          ):(<p className="mt-[10px] w-1/3 ml-[5px]">Login First</p>)
+          }
           <div className="hidden sm:flex flex-row gap-[10px] text-[17.5px] md:gap-[25px] md:text-[32.5px]">
           <Link to={"/circle"}><motion.div variants={variants} whileHover="whileHover" whileTap="whileTap" className="hover:text-sky-500/50">Circle</motion.div></Link>
           <Link to={"/cube"}><motion.div variants={variants} whileHover="whileHover" whileTap="whileTap" className="hover:text-sky-500/50">Cube</motion.div></Link>
@@ -60,12 +60,12 @@ const Navbar=()=>{
           <Link to={"/images"}><motion.div variants={variants} whileHover="whileHover" whileTap="whileTap" className="hover:text-sky-500/50">Images</motion.div></Link>
           <Link to={"/check"}><motion.div variants={variants} whileHover="whileHover" whileTap="whileTap" className="hover:text-sky-500/50">Check</motion.div></Link>
           </div>
-          <div className="mr-[15px] mt-[10px] bg-black mx-auto sm:hidden flex flex-col gap-[20px] text-[17.5px]">
-              {
+          <div className="w-1/3 mr-[15px] mt-[10px] bg-black mx-auto sm:hidden flex flex-col justify-center items-center gap-[20px] text-[17.5px]">
+                {
                 isOpen ? (
-                <div className="flex flex-col gap-[15px]">
+                <div className="flex flex-col gap-[15px] items-center">
                     <RxCross1 className="mr-[10px] h-[30px] w-[30px]" onClick={()=>{setIsOpen(!isOpen)}}/>
-                    <div className="bg-black h-auto w-auto flex flex-col gap-[10px] p-[10px] rounded-xl">
+                    <div className="text-[25px] absolute mt-[30px] z-2 bg-black h-auto w-auto flex flex-col gap-[10px] p-[10px] rounded-xl">
                       <Link to={"/circle"}><motion.div>Circle</motion.div></Link>
                       <Link to={"/cube"}><motion.div>Cube</motion.div></Link>
                       <Link to={"/wave"}><motion.div>Wave</motion.div></Link>
@@ -76,7 +76,7 @@ const Navbar=()=>{
                 (<TbMenuOrder className="flex gap-[15px] h-[35px] w-[35px]" onClick={()=>{setIsOpen(!isOpen)}}/>)  
               }
           </div>
-          <div className="flex gap-[15px] text-white ">
+          <div className="w-1/3 h-auto flex justify-center items-center gap-[15px] text-white ">
             <LoginButton/>
             <LogoutButton/>
           </div>
