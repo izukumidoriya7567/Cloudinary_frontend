@@ -60,7 +60,7 @@ const Navbar=()=>{
           <Link to={"/images"}><motion.div variants={variants} whileHover="whileHover" whileTap="whileTap" className="hover:text-sky-500/50">Images</motion.div></Link>
           <Link to={"/check"}><motion.div variants={variants} whileHover="whileHover" whileTap="whileTap" className="hover:text-sky-500/50">Check</motion.div></Link>
           </div>
-          <div className="w-1/3 mr-[15px] mt-[10px] bg-black mx-auto sm:hidden flex flex-col justify-center items-center gap-[20px] text-[17.5px]">
+          <div className="w-1/3 mt-[10px] ml-[20px] bg-black sm:hidden flex flex-col justify-center items-center gap-[20px] text-[17.5px]">
                 {
                 isOpen ? (
                 <div className="flex flex-col gap-[15px] items-center">
